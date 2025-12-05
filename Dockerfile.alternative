@@ -1,0 +1,41 @@
+# Alternative Dockerfile - install Geth manually
+FROM ubuntu:22.04
+
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    wget \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Geth (latest stable version)
+RUN wget -q -O - https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.13.5-916d9836.tar.gz | \
+    tar -xz -C /tmp && \
+    cp /tmp/geth-linux-amd64-1.13.5-916d9836/geth /usr/local/bin/geth && \
+    chmod +x /usr/local/bin/geth && \
+    rm -rf /tmp/geth-linux-amd64-1.13.5-916d9836 && \
+    geth version
+
+# Set working directory
+WORKDIR /app
+
+# Copy genesis file
+COPY chain-config/genesis-mainnet-fixed.json /genesis.json
+
+# Create data directory
+RUN mkdir -p /data
+
+# Initialize chain (if data doesn't exist)
+RUN if [ ! -f /data/geth/chaindata/CURRENT ]; then \
+      geth --datadir /data init /genesis.json || true; \
+    fi
+
+# Expose ports
+EXPOSE 8545 8546 30303
+
+# Start Geth
+ENTRYPOINT ["geth"]
+CMD ["--networkid", "10144", "--datadir", "/data", "--http", "--http.addr", "0.0.0.0", "--http.port", "8545", "--http.api", "eth,net,web3,txpool", "--http.corsdomain", "*", "--http.vhosts", "*", "--ws", "--ws.addr", "0.0.0.0", "--ws.port", "8546", "--ws.api", "eth,net,web3", "--ws.origins", "*", "--allow-insecure-unlock", "--rpc.allow-unprotected-txs", "--nodiscover"]
