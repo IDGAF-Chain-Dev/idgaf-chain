@@ -1,114 +1,113 @@
-# 배포 가이드
+# Deployment Guide
 
-IDGAF Chain 브리지 시스템을 배포하는 단계별 가이드입니다.
+Step-by-step guide for deploying the IDGAF Chain bridge system.
 
-## 사전 요구사항
+## Prerequisites
 
-1. Node.js 및 npm 설치
-2. Hardhat 설치 (`npm install`)
-3. Monad 및 IDGAF Chain 네트워크 접근 권한
-4. 배포용 계정의 개인키 (충분한 가스비 확보)
+1. Node.js and npm installed
+2. Hardhat installed (`npm install`)
+3. Access to Monad and IDGAF Chain networks
+4. Private key for deployment account (with sufficient gas)
 
-## 배포 순서
+## Deployment Order
 
-### 1단계: 환경 설정
+### Step 1: Environment Setup
 
-`.env` 파일을 생성하고 필요한 변수를 설정하세요:
+Create a `.env` file and set the required variables:
 
 ```env
 MONAD_RPC_URL=https://rpc.monad.xyz
-MONAD_CHAIN_ID=10143
+MONAD_CHAIN_ID=143
 IDGAF_RPC_URL=https://rpc.idgaf.chain
 IDGAF_CHAIN_ID=10144
 PRIVATE_KEY=your_private_key_here
 ```
 
-### 2단계: 컨트랙트 컴파일
+### Step 2: Compile Contracts
 
 ```bash
 npm run compile
 ```
 
-### 3단계: L2 컨트랙트 배포 (IDGAF Chain)
+### Step 3: Deploy L2 Contracts (IDGAF Chain)
 
 ```bash
-npx hardhat run scripts/deploy.ts --network idgaf
+npm run deploy:l2
 ```
 
-이 단계에서 배포되는 컨트랙트:
-- `IDGAFTokenL2`: L2에서 사용할 래핑된 토큰
-- `IDGAFChainBridge`: L2 브리지 컨트랙트
+Contracts deployed in this step:
+- `IDGAFTokenL2`: Wrapped token for use on L2
+- `IDGAFChainBridge`: L2 bridge contract
 
-배포 후 주소를 기록해두세요.
+Record the addresses after deployment.
 
-### 4단계: L1 컨트랙트 배포 (Monad)
+### Step 4: Deploy L1 Contracts (Monad)
 
 ```bash
-npx hardhat run scripts/deploy.ts --network monad
+npm run deploy:l1
 ```
 
-이 단계에서 배포되는 컨트랙트:
-- `IDGAFBridge`: L1 브리지 컨트랙트
+Contracts deployed in this step:
+- `IDGAFBridge`: L1 bridge contract
 
-### 5단계: 브리지 연결 설정
+### Step 5: Setup Bridge Connection
 
-L1과 L2 브리지를 연결합니다:
+Connect L1 and L2 bridges:
 
 ```bash
-# L2 브리지에 L1 브리지 주소 설정
+# Set L1 bridge address on L2 bridge
 npx hardhat run scripts/setup-bridge.ts --network idgaf
 ```
 
-### 6단계: 브리지 오퍼레이터 설정
+### Step 6: Setup Bridge Operator
 
-L1 브리지에 신뢰할 수 있는 오퍼레이터를 추가합니다:
+Add a trusted operator to L1 bridge:
 
 ```typescript
-// scripts/set-operator.ts 예시
+// Example in scripts/set-operator.ts
 const bridge = await ethers.getContractAt("IDGAFBridge", l1BridgeAddress);
 await bridge.setBridgeOperator(operatorAddress, true);
 ```
 
-### 7단계: 배포 검증
+### Step 7: Verify Deployment
 
 ```bash
 npx hardhat run scripts/verify-contracts.ts --network idgaf
 npx hardhat run scripts/verify-contracts.ts --network monad
 ```
 
-## 배포 후 확인사항
+## Post-Deployment Checklist
 
-1. ✅ 모든 컨트랙트가 올바른 주소에 배포되었는지 확인
-2. ✅ L2 토큰의 브리지 주소가 올바르게 설정되었는지 확인
-3. ✅ L2 브리지의 Monad 브리지 주소가 올바르게 설정되었는지 확인
-4. ✅ L1 브리지의 IDGAF 토큰 주소가 `0x87deEb3696Ec069d5460C389cc78925df50d7777`인지 확인
-5. ✅ 브리지 오퍼레이터가 올바르게 설정되었는지 확인
+1. ✅ Verify all contracts are deployed to correct addresses
+2. ✅ Verify bridge address is correctly set on L2 token
+3. ✅ Verify Monad bridge address is correctly set on L2 bridge
+4. ✅ Verify IDGAF token address on L1 bridge is `0x87deEb3696Ec069d5460C389cc78925df50d7777`
+5. ✅ Verify bridge operator is correctly configured
 
-## 릴레이어 설정
+## Relayer Setup
 
-프로덕션 환경에서는 릴레이어를 설정하여 L1과 L2 간 이벤트를 모니터링하고 자동으로 처리해야 합니다.
+In production, you should set up a relayer to monitor L1 and L2 events and process them automatically.
 
-릴레이어 예시 코드는 `scripts/relayer-example.ts`를 참고하세요.
+See `scripts/relayer-example.ts` for example relayer code.
 
-## 문제 해결
+## Troubleshooting
 
-### 배포 실패
+### Deployment Failure
 
-- 가스비가 충분한지 확인
-- 네트워크 연결 상태 확인
-- 컨트랙트 컴파일 오류 확인
+- Check if gas is sufficient
+- Verify network connectivity
+- Check for contract compilation errors
 
-### 브리지 연결 실패
+### Bridge Connection Failure
 
-- 배포 주소가 올바른지 확인
-- 네트워크가 올바른지 확인
-- 트랜잭션이 성공했는지 확인
+- Verify deployment addresses are correct
+- Verify networks are correct
+- Verify transactions succeeded
 
-## 보안 체크리스트
+## Security Checklist
 
-- [ ] 모든 컨트랙트가 최신 버전으로 컴파일되었는지 확인
-- [ ] 오너 주소가 멀티시그 지갑인지 확인
-- [ ] 브리지 오퍼레이터가 신뢰할 수 있는 주소인지 확인
-- [ ] 배포 전 모든 컨트랙트를 감사받았는지 확인
-- [ ] 테스트넷에서 충분히 테스트했는지 확인
-
+- [ ] All contracts compiled with latest version
+- [ ] Owner address is a multisig wallet
+- [ ] Bridge operator is a trusted address
+- [ ] All contracts audited before deployment
+- [ ] Sufficiently tested on testnet
