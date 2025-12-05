@@ -1,0 +1,33 @@
+# Working Dockerfile - Use pre-built Geth image and copy binary
+FROM ethereum/client-go:latest as geth-source
+
+FROM ubuntu:22.04
+
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Copy geth from official image
+COPY --from=geth-source /usr/local/bin/geth /usr/local/bin/geth
+
+# Verify geth
+RUN /usr/local/bin/geth version
+
+# Set working directory
+WORKDIR /app
+
+# Copy genesis file
+COPY chain-config/genesis-mainnet-fixed.json /genesis.json
+
+# Create data directory
+RUN mkdir -p /data
+
+# Initialize chain
+RUN /usr/local/bin/geth --datadir /data init /genesis.json || true
+
+# Expose ports
+EXPOSE 8545 8546 30303
+
+# Start Geth
+ENTRYPOINT ["/usr/local/bin/geth"]
+CMD ["--networkid", "10144", "--datadir", "/data", "--http", "--http.addr", "0.0.0.0", "--http.port", "8545", "--http.api", "eth,net,web3,txpool", "--http.corsdomain", "*", "--http.vhosts", "*", "--ws", "--ws.addr", "0.0.0.0", "--ws.port", "8546", "--ws.api", "eth,net,web3", "--ws.origins", "*", "--allow-insecure-unlock", "--rpc.allow-unprotected-txs", "--nodiscover"]
+
