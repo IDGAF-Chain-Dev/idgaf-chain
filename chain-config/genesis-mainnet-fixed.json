@@ -13,16 +13,18 @@
     "londonBlock": 0,
     "arrowGlacierBlock": 0,
     "grayGlacierBlock": 0,
-    "mergeNetsplitBlock": 0
+    "mergeNetsplitBlock": 0,
+    "terminalTotalDifficulty": 0,
+    "terminalTotalDifficultyPassed": true
   },
   "alloc": {},
   "coinbase": "0x0000000000000000000000000000000000000000",
-  "difficulty": "0x1",
+  "difficulty": "0x0",
   "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "gasLimit": "0x1c9c380",
   "nonce": "0x0000000000000042",
   "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-  "timestamp": "0x0"
+  "timestamp": "0x0",
+  "baseFeePerGas": "0x3b9aca00"
 }
-
