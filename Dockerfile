@@ -5,7 +5,7 @@ FROM ethereum/client-go:latest
 WORKDIR /app
 
 # Copy genesis file
-COPY chain-config/genesis-mainnet.json /genesis.json
+COPY chain-config/genesis-mainnet-fixed.json /genesis.json
 
 # Create data directory
 RUN mkdir -p /data
