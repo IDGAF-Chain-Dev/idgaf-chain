@@ -1,0 +1,10 @@
+# Simple Render configuration
+# Use this if render.yaml doesn't work
+
+services:
+  - type: web
+    name: idgaf-chain-node
+    env: docker
+    dockerfilePath: cloud-deploy/Dockerfile.render
+    plan: free
+
