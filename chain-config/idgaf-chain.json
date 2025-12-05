@@ -1,0 +1,48 @@
+{
+  "name": "IDGAF Chain",
+  "chainId": 10144,
+  "shortName": "idgaf",
+  "chain": "IDGAF",
+  "network": "mainnet",
+  "networkId": 10144,
+  "nativeCurrency": {
+    "name": "IDGAF",
+    "symbol": "IDGAF",
+    "decimals": 18
+  },
+  "rpc": [
+    "https://rpc.idgaf.chain",
+    "https://rpc1.idgaf.chain",
+    "https://rpc2.idgaf.chain",
+    "https://rpc3.idgaf.chain",
+    "https://rpc-mainnet.idgaf.chain",
+    "wss://rpc.idgaf.chain",
+    "wss://rpc1.idgaf.chain"
+  ],
+  "faucets": [],
+  "explorers": [
+    {
+      "name": "IDGAF Explorer",
+      "url": "https://explorer.idgaf.chain",
+      "standard": "EIP3091"
+    },
+    {
+      "name": "IDGAF Vision",
+      "url": "https://idgafvision.com",
+      "standard": "EIP3091"
+    }
+  ],
+  "infoURL": "https://idgaf.chain",
+  "parent": {
+    "type": "L2",
+    "chain": "Monad",
+    "bridges": [
+      {
+        "url": "https://bridge.idgaf.chain"
+      }
+    ]
+  },
+  "icon": "idgaf",
+  "status": "active"
+}
+
