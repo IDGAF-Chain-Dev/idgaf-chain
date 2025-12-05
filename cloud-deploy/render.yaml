@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: idgaf-chain-node
+    env: docker
+    dockerfilePath: ./cloud-deploy/Dockerfile.render
+    dockerContext: .
+    envVars:
+      - key: NETWORK_ID
+        value: 10144
+      - key: CHAIN_ID
+        value: 10144
+      - key: HTTP_PORT
+        value: 8545
+      - key: WS_PORT
+        value: 8546
+    plan: free
+    region: oregon
+    healthCheckPath: /
+    autoDeploy: true
+
