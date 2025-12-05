@@ -2,6 +2,7 @@
   "name": "IDGAF Chain",
   "chain": "IDGAF",
   "rpc": [
+    "https://idgaf-chain-node.onrender.com",
     "https://rpc.idgaf.chain",
     "https://rpc1.idgaf.chain",
     "https://rpc2.idgaf.chain",
