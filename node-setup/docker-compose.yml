@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  idgaf-node:
+    image: ethereum/client-go:latest
+    container_name: idgaf-chain-node
+    restart: unless-stopped
+    ports:
+      - "8545:8545"  # HTTP RPC
+      - "8546:8546"  # WebSocket RPC
+      - "30303:30303"  # P2P
+      - "30303:30303/udp"  # P2P UDP
+    volumes:
+      - ./data:/root/.ethereum
+      - ./genesis.json:/genesis.json
+    command:
+      - --networkid=10144
+      - --datadir=/root/.ethereum
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.api=eth,net,web3,txpool
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.api=eth,net,web3
+      - --ws.origins=*
+      - --allow-insecure-unlock
+      - --rpc.allow-unprotected-txs
+    environment:
+      - NODE_NAME=idgaf-mainnet
+    networks:
+      - idgaf-network
+
+  idgaf-rpc:
+    image: nginx:alpine
+    container_name: idgaf-rpc-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - idgaf-node
+    networks:
+      - idgaf-network
+
+networks:
+  idgaf-network:
+    driver: bridge
+
