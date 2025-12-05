@@ -1,85 +1,85 @@
-# IDGAF Chain 빠른 시작 가이드
+# IDGAF Chain Quick Start Guide
 
-## 🚀 전체 시스템 실행하기
+## 🚀 Running the Complete System
 
-### 1. 프론트엔드 실행 (Simple Version - 권장)
+### 1. Start Frontend (Simple Version - Recommended)
 
-가장 간단한 방법:
+Simplest method:
 
-1. `frontend/index-simple.html` 파일을 브라우저에서 열기
-2. MetaMask 지갑 연결
-3. 브리지 사용 시작!
+1. Open `frontend/index-simple.html` in your browser
+2. Connect MetaMask wallet
+3. Start bridging!
 
-### 2. 릴레이어 서비스 실행
+### 2. Start Relayer Service
 
 ```bash
-# 릴레이어 시작 (L1/L2 이벤트 모니터링 및 자동 처리)
+# Start relayer (monitors L1/L2 events and auto-processes)
 npm run relayer
 ```
 
-**별도 터미널에서 L2 노드 실행 (로컬 테스트용):**
+**Run L2 node in separate terminal (for local testing):**
 ```bash
 npm run node:idgaf
 ```
 
-### 3. L1 브리지 오퍼레이터 설정
+### 3. Setup L1 Bridge Operator
 
-릴레이어 계정을 L1 브리지의 오퍼레이터로 설정:
+Set relayer account as operator on L1 bridge:
 
 ```bash
 npx hardhat run scripts/setup-operator.ts --network monad
 ```
 
-## 📋 체크리스트
+## 📋 Checklist
 
-### 필수 설정
-- [x] 스마트 컨트랙트 배포 완료
-- [ ] 릴레이어 서비스 실행
-- [ ] L1 브리지 오퍼레이터 설정
-- [ ] 프론트엔드 접근
+### Required Setup
+- [x] Smart contracts deployed
+- [ ] Relayer service running
+- [ ] L1 bridge operator configured
+- [ ] Frontend accessible
 
-### 테스트
-- [ ] L1 → L2 입금 테스트
-- [ ] L2 → L1 출금 테스트
-- [ ] 릴레이어 자동 처리 확인
+### Testing
+- [ ] Test L1 → L2 deposit
+- [ ] Test L2 → L1 withdrawal
+- [ ] Verify relayer auto-processing
 
-## 🎯 사용 시나리오
+## 🎯 Usage Scenarios
 
-### 시나리오 1: L1 → L2 입금
+### Scenario 1: L1 → L2 Deposit
 
-1. 프론트엔드에서 "Monad → IDGAF" 선택
-2. 금액 입력 (예: 100 IDGAF)
-3. "브리지 실행" 클릭
-4. MetaMask에서 트랜잭션 승인
-5. 릴레이어가 자동으로 L2에서 처리
-6. L2 지갑에서 토큰 확인
+1. Select "Monad → IDGAF" in frontend
+2. Enter amount (e.g., 100 IDGAF)
+3. Click "Execute Bridge"
+4. Approve transaction in MetaMask
+5. Relayer automatically processes on L2
+6. Verify tokens in L2 wallet
 
-### 시나리오 2: L2 → L1 출금
+### Scenario 2: L2 → L1 Withdrawal
 
-1. 프론트엔드에서 "IDGAF → Monad" 선택
-2. 금액 입력
-3. "브리지 실행" 클릭
-4. MetaMask에서 트랜잭션 승인
-5. 릴레이어가 자동으로 L1에서 처리
-6. Monad 지갑에서 토큰 확인
+1. Select "IDGAF → Monad" in frontend
+2. Enter amount
+3. Click "Execute Bridge"
+4. Approve transaction in MetaMask
+5. Relayer automatically processes on L1
+6. Verify tokens in Monad wallet
 
-## 🔧 유용한 명령어
+## 🔧 Useful Commands
 
 ```bash
-# 잔액 확인
+# Check balance
 npx hardhat run scripts/check-balance.ts --network monad
 
-# 브리지 플로우 테스트
+# Test bridge flow
 npx hardhat run scripts/test-bridge-flow.ts --network hardhat
 
-# RPC 연결 테스트
+# Test RPC connection
 npx hardhat run scripts/test-rpc.ts
 
-# 컨트랙트 검증
+# Verify contracts
 npx hardhat run scripts/verify-contracts.ts --network monad
 ```
 
-## 📍 배포된 컨트랙트 주소
+## 📍 Deployed Contract Addresses
 
 ### Monad (L1)
 - **IDGAFBridge**: `0x006a5044781F97475390F33E3E1c903e393fcc3d`
@@ -89,27 +89,26 @@ npx hardhat run scripts/verify-contracts.ts --network monad
 - **IDGAFTokenL2**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
 - **IDGAFChainBridge**: `0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`
 
-## 🆘 문제 해결
+## 🆘 Troubleshooting
 
-### 릴레이어가 작동하지 않음
-- RPC URL 확인
-- 네트워크 연결 확인
-- 오퍼레이터 권한 확인
+### Relayer not working
+- Check RPC URLs
+- Verify network connectivity
+- Check operator permissions
 
-### 프론트엔드에서 트랜잭션 실패
-- MetaMask 네트워크 확인
-- 가스비 확인
-- 토큰 잔액 확인
+### Frontend transaction failures
+- Verify MetaMask network
+- Check gas fees
+- Verify token balance
 
-### 네트워크 연결 오류
-- `.env` 파일 설정 확인
-- RPC 엔드포인트 작동 여부 확인
+### Network connection errors
+- Check `.env` file configuration
+- Verify RPC endpoints are working
 
-## 📚 추가 문서
+## 📚 Additional Documentation
 
-- [README.md](./README.md) - 프로젝트 개요
-- [DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md) - 배포 요약
-- [NEXT_STEPS.md](./NEXT_STEPS.md) - 다음 단계
-- [relayer/README.md](./relayer/README.md) - 릴레이어 가이드
-- [frontend/README.md](./frontend/README.md) - 프론트엔드 가이드
-
+- [README.md](./README.md) - Project overview
+- [DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md) - Deployment summary
+- [NEXT_STEPS.md](./NEXT_STEPS.md) - Next steps
+- [relayer/README.md](./relayer/README.md) - Relayer guide
+- [frontend/README.md](./frontend/README.md) - Frontend guide
