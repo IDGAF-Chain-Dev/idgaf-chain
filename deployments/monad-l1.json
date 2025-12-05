@@ -1,0 +1,13 @@
+{
+  "network": {
+    "name": "monad",
+    "chainId": "143"
+  },
+  "deployer": "0x359A8BC2A440548086f1701229971CEfE52226e9",
+  "contracts": {
+    "idgafBridgeL1": "0x006a5044781F97475390F33E3E1c903e393fcc3d"
+  },
+  "idgafTokenL1": "0x87deEb3696Ec069d5460C389cc78925df50d7777",
+  "timestamp": "2025-12-05T06:24:32.795Z"
+}
+
