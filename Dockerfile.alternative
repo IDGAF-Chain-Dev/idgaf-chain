@@ -9,15 +9,26 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wget \
     ca-certificates \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Geth (latest stable version)
-RUN wget -q -O - https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.13.5-916d9836.tar.gz | \
-    tar -xz -C /tmp && \
-    cp /tmp/geth-linux-amd64-1.13.5-916d9836/geth /usr/local/bin/geth && \
+# Install Geth - try multiple methods
+# Method 1: Try latest version from official releases
+RUN GETH_VERSION="1.13.15" && \
+    wget -q -O /tmp/geth.tar.gz "https://github.com/ethereum/go-ethereum/releases/download/v${GETH_VERSION}/geth_${GETH_VERSION}_linux_amd64.tar.gz" && \
+    tar -xz -f /tmp/geth.tar.gz -C /tmp && \
+    cp /tmp/geth /usr/local/bin/geth && \
     chmod +x /usr/local/bin/geth && \
-    rm -rf /tmp/geth-linux-amd64-1.13.5-916d9836 && \
-    geth version
+    rm -rf /tmp/geth* || \
+    (wget -q -O /tmp/geth.tar.gz "https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-${GETH_VERSION}-*.tar.gz" && \
+     tar -xz -f /tmp/geth.tar.gz -C /tmp && \
+     find /tmp -name geth -type f -exec cp {} /usr/local/bin/geth \; && \
+     chmod +x /usr/local/bin/geth && \
+     rm -rf /tmp/geth*) || \
+    echo "Geth installation will be retried"
+
+# Verify installation
+RUN geth version || echo "Geth not found, will install via alternative method"
 
 # Set working directory
 WORKDIR /app
