@@ -17,7 +17,11 @@
     "terminalTotalDifficulty": 0,
     "terminalTotalDifficultyPassed": true
   },
-  "alloc": {},
+  "alloc": {
+    "0x359A8BC2A440548086f1701229971CEfE52226e9": {
+      "balance": "10000000000000000000000"
+    }
+  },
   "coinbase": "0x0000000000000000000000000000000000000000",
   "difficulty": "0x0",
   "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
